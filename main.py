@@ -60,10 +60,10 @@ if __name__ == "__main__":
         # print(int.from_bytes(connected_marg.read(), byteorder="big", signed=True))
 
         # a = connected_marg.read(4)
-        word = connected_marg.read(4)
-        readline.append(int.from_bytes(word, byteorder="big", signed=True))
+        word = connected_marg.read()
+        readline.append(int.from_bytes(word, byteorder="big", signed=False))
         # readline.append(struct.unpack('f', connected_marg.read(4)))
-        if len(readline) == 16 - 1:
+        if len(readline) == CALCULATED_BYTES_RETURNED:
             print("P {0}", readline)
             readline.clear()
 
