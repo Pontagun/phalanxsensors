@@ -2,10 +2,14 @@ import configparser
 import struct
 from serialsensor import sensor as sensor
 
-read_bytes0 = []
-commands = []
+
+def byte_to_float(line):
+    data = [line[3], line[2], line[1], line[0]]
+    return struct.unpack('f', bytearray(data))
+
 
 if __name__ == "__main__":
+    reading = []
     config = configparser.ConfigParser()
     config.read("configuration.ini")
 
@@ -55,23 +59,25 @@ if __name__ == "__main__":
     connected_marg.write(start_command)
 
     while True:
-        # readline.append(float.from_bytes(connected_marg.read(), byteorder="big", signed=True))
-        #readline.append(struct.unpack('f', connected_marg.read()))
-        # print(int.from_bytes(connected_marg.read(), byteorder="big", signed=True))
 
-        # a = connected_marg.read(4)
-        word = connected_marg.read()
+        word = connected_marg.read()  # TODO change "word" to other names, it reads a byte(not 4).
         readline.append(int.from_bytes(word, byteorder="big", signed=False))
-        # readline.append(struct.unpack('f', connected_marg.read(4)))
+
         if len(readline) == CALCULATED_BYTES_RETURNED:
-            print("P {0}", readline)
-            readline.clear()
+            reading.append(byte_to_float(readline[0:4]))
+            reading.append(byte_to_float(readline[4:8]))
+            reading.append(byte_to_float(readline[8:12]))
+            reading.append(byte_to_float(readline[12:16]))
+            reading.append(byte_to_float(readline[16:20]))
+            reading.append(byte_to_float(readline[20:24]))
+            reading.append(byte_to_float(readline[24:28]))
+            reading.append(byte_to_float(readline[28:32]))
+            reading.append(byte_to_float(readline[32:36]))
+            reading.append(byte_to_float(readline[36:40]))
+            reading.append(byte_to_float(readline[40:44]))
+            reading.append(byte_to_float(readline[44:48]))
+            reading.append(byte_to_float(readline[48:52]))
+            reading.append(byte_to_float(readline[52:56]))
 
-
-    # for i in range(300):
-    #     a = connected_marg.read(CALCULATED_BYTES_RETURNED)
-    #     aa = [int.from_bytes(a, byteorder="big", signed=True) for x in a]
-    #     print(i, aa)
-
-
-    # print(stream_slot_byte)
+            readline.clear()  # Streaming 56 bytes from command.
+            reading.clear()  # Real readings (number)
