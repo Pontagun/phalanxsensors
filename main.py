@@ -1,7 +1,8 @@
 import configparser
 import struct
 from serialsensor import sensor as sensor
-
+import smbus
+import smbus2
 
 def byte_to_float(line):
     data = [line[3], line[2], line[1], line[0]]
@@ -16,7 +17,7 @@ if __name__ == "__main__":
     marg_sensor = config["WiredMARGSensor"]
     connection = config["CONNECTION"]
 
-    interval = (int(70000)).to_bytes(4, "big")
+    interval = (int(10000)).to_bytes(4, "big")
     delay = (0).to_bytes(4, "big")
     duration = (0xFFFFFFFF).to_bytes(4, "big")
 
